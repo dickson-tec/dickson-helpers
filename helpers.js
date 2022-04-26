@@ -116,6 +116,11 @@ export const transform = (startingData, options = defaultTransformOptions) => {
         _i: 0,
         _data: [startingData],
         _indentCache: null,
+        _cacheFolder: './',
+        _cacheName: 'cache-%i.json',
+        _cache: {
+            index: 0,
+        },
         options: {
             ...defaultTransformOptions,
             ...options,
@@ -132,15 +137,28 @@ export const transform = (startingData, options = defaultTransformOptions) => {
         tailData(count = 2) {
             return this._data.slice(-count);
         },
+        // withCache(folder, cacheName) {
+        //     if (folder) this._cacheFolder = folder;
+        //     if (cacheName) this._cacheName = cacheName;
+
+        //     createDirIfNotExist();
+        //     const cacheStatePath = path.join(this._cacheFolder, this._cacheName.replace('%i', '0'));
+        //     fs.readFileSync()
+        //     _exportJSON(this._cacheFolder)(this._cacheName.replace('%i', '0'), this._cache);
+        // },
+        // cache(title = '') {
+        //     this._cacheFolder
+        //     this._cacheName
+        // },
         /**
-         * @param {string | ((data:any, index:number)=>any) } a
-         * @param {(data:any, index:number)=>any} b
+         * @param {string | ((data:any, index:number)=>any) } callbackOrTitle
+         * @param {(data:any, index:number)=>any} [nullOrCallback]
          */
-        tryStep(a, b) {
+        tryStep(callbackOrTitle, nullOrCallback) {
             const [stepTitle, callback] = ((_a, _b) => {
                 if (typeof _a === 'string') return [_a, _b];
                 return [null, _a];
-            })(a, b);
+            })(callbackOrTitle, nullOrCallback);
 
             try {
                 if (this.options.isLogSteps) console.log(`${this.indent}(${this._i}) ${stepTitle}`);
